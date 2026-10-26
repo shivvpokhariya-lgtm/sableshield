@@ -67,7 +67,7 @@ async function gemmaAnalyse(text) {
   const key = process.env.GEMINI_API_KEY;
   if (!key) return null;
   const prompt = `You are SableShield, a scam-call detector. Analyse this caller transcript and return ONLY valid JSON (no markdown, no fences):\n{\n  "type": "scam" or "safe",\n  "score": "e.g. 92% SCAM RISK or LOW RISK",\n  "title": "short verdict",\n  "sub": "one sentence explanation",\n  "flags": ["red flag 1", "red flag 2"],\n  "safe": ["safe reason 1"]\n}\nTranscript: ${text}`;
-  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemma-3-27b-it:generateContent?key=' + encodeURIComponent(key);
+  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemma-4-26b-a4b-it:generateContent?key=' + encodeURIComponent(key);
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

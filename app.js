@@ -200,7 +200,7 @@ function ruleBased(text) {
 
 async function callGemma(apiKey, text) {
   const prompt = `You are SableShield, a scam-call detector. Analyse this caller transcript and return ONLY valid JSON (no markdown, no fences):\n{\n  "type": "scam" or "safe",\n  "score": "e.g. 92% SCAM RISK or LOW RISK",\n  "title": "short verdict",\n  "sub": "one sentence explanation",\n  "flags": ["red flag 1", "red flag 2"],\n  "safe": ["safe reason 1"]\n}\nTranscript: ${text}`;
-  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemma-3-27b-it:generateContent?key=' + encodeURIComponent(apiKey);
+  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemma-4-26b-a4b-it:generateContent?key=' + encodeURIComponent(apiKey);
   const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.2, maxOutputTokens: 800 } }) });
   if (!res.ok) throw new Error('API ' + res.status);

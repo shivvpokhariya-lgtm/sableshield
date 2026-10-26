@@ -29,7 +29,7 @@ No photo needed. No setup. No API key needed for the demo.
 
 Paste what a caller is saying into the live box and tap **Analyse**:
 
-- **With a Gemini API key** → Gemma 4 (`gemma-3-27b-it`) analyses the transcript and returns a structured verdict.
+- **With a Gemini API key** → Gemma 4 (`gemma-4-26b-a4b-it`) analyses the transcript and returns a structured verdict.
 - **Without a key** → instant rule-based analysis runs (same scam patterns, deterministic, zero fail).
 
 Get a free key at <https://aistudio.google.com/apikey>.
