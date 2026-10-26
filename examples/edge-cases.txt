@@ -1,0 +1,11 @@
+Case 1 — Urgent but no secret asked:
+"Your electricity bill is overdue and the connection will be cut tomorrow. Pay on the official app or website."
+Expected: medium score from urgency alone; no OTP/secrecy flag. Gemma should judge it as a possibly legitimate reminder, not a confirmed scam.
+
+Case 2 — Prize message:
+"Congratulations! You have won a free gift. Click this link and pay a small delivery fee to claim it."
+Expected: high score (prize + link + fee pattern).
+
+Case 3 — Mixed signals:
+A real-sounding delivery call that suddenly asks for an OTP "to confirm the address."
+Expected: the OTP request dominates — verdict SCAM despite the plausible opening.
