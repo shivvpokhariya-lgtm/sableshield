@@ -1,0 +1,3 @@
+Caller: Hi, this is your courier partner. Your package is out for delivery and will arrive today between 4 and 6 pm.
+Caller: The delivery agent will call you once more when nearby. No payment is needed on delivery.
+Caller: Thank you, have a good day.
