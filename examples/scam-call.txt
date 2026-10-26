@@ -1,0 +1,6 @@
+Caller: Hello, I am calling from your bank's security department.
+Caller: We have detected suspicious activity on your account.
+Caller: Your account will be BLOCKED in 2 hours if you do not verify now.
+Caller: Please share the OTP that was just sent to your mobile.
+Caller: Do not tell anyone about this call, not even your family, or the verification will fail.
+Caller: Also install this support app so we can fix the issue remotely.
