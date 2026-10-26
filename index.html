@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SableShield — Live Scam Call Detector</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        @font-face {
+            font-family: 'Satoshi';
+            src: url('https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/uploads/4aed2f49-a476-436f-bae8-f31aa18f46fa/1767920861040-60c1c779/Satoshi-Variable.woff2') format('woff2');
+            font-weight: 300 900;
+            font-display: swap;
+            font-style: normal;
+        }
+
+        :root {
+            --font-satoshi: 'Satoshi', 'Inter', sans-serif;
+            --color-bg: #050505;
+            --color-accent: #FF2E63;
+        }
+
+        body {
+            font-family: var(--font-satoshi);
+            background-color: var(--color-bg);
+            color: #ebebeb;
+            scroll-behavior: smooth;
+        }
+
+        .selection-coral::selection {
+            background-color: var(--color-accent);
+            color: white;
+        }
+
+        .glass-nav {
+            background: rgba(17, 17, 17, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero-text {
+            font-size: 13vw;
+            line-height: 0.9;
+            letter-spacing: -0.05em;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Scroll reveal simulation via intersection observer is typical but here we use utility classes for layout */
+
+        /* Smoothness (additive — template classes untouched):
+           - nav drops in first on load, then /shield rises slowly after it,
+             then tagline, badges, overlays follow in slow stages
+           - everything below reveals on scroll via IntersectionObserver
+           - anchor jumps keep clear of the fixed nav */
+        html { scroll-padding-top: 96px; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes navDrop {
+            from { opacity: 0; transform: translateY(-16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-enter { animation: navDrop 1.2s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+        /* Nav brand on scroll: scrolling down fades the SableShield text out
+           smoothly and dims the S. logo a little; scrolling up brings both
+           back. The logo never leaves — only the text vanishes. */
+        nav .nav-brand-text { transition: opacity 0.5s ease, transform 0.5s ease; }
+        nav .nav-logo { transition: opacity 0.5s ease, transform 0.5s ease; }
+        nav.nav-compact .nav-brand-text { opacity: 0; transform: translateX(-8px); }
+        nav.nav-compact .nav-logo { opacity: 0.6; }
+
+        .load-fade { opacity: 0; animation: fadeUp 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .load-delay-shield { animation-delay: 0.8s; }
+        .load-delay-1 { animation-delay: 1.6s; }
+        .load-delay-2 { animation-delay: 2.1s; }
+        .load-delay-3 { animation-delay: 2.6s; }
+
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.12s; }
+        .reveal-delay-2 { transition-delay: 0.24s; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .nav-enter, .load-fade, .reveal { animation: none; transition: none; opacity: 1; transform: none; }
+            nav .nav-brand-text, nav .nav-logo { transition: none; }
+        }
+
+        /* Palette (darkened): black base + deep royal amethyst (#7C3AED) + dark electric cyan (#00C2D8).
+           Synth red stays only on danger elements (verdict, scam buttons, flags). */
+
+        /* Hero wordmark: whitish black, on the whiter side — white melting into light silver. */
+        .shield-gradient {
+            background: linear-gradient(120deg, #FFFFFF 0%, #E6E6E6 45%, #C0C0C0 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Circular "no" sign beside /shield — the runner version:
+           The dot starts at the top of the track (the start line), waits beside
+           /shield, then runs one full lap, leaving the hot-pink → dark-red
+           gradient trace behind it. When the lap completes, the slash draws in,
+           the runner fades out, and the logo goes live forever: glow pulse +
+           breathe + slow rotating dashed halo. */
+        .no-sign {
+            position: relative;
+            flex-shrink: 0;
+            width: clamp(64px, 11vw, 170px);
+            height: clamp(64px, 11vw, 170px);
+            border-radius: 9999px;
+        }
+
+        .no-sign.is-live {
+            animation: noSignGlow 3s ease-in-out infinite,
+                       noSignBreathe 3.6s ease-in-out infinite;
+        }
+
+        .no-sign-base {
+            position: absolute;
+            inset: 6%;
+            border-radius: 9999px;
+            background: #0A0A0A;
+            opacity: 0;
+            transition: opacity 1.8s ease;
+        }
+
+        .no-sign.is-tracing .no-sign-base { opacity: 1; }
+
+        .no-sign-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .no-sign-runner {
+            position: absolute;
+            left: 50%;
+            top: 4%;
+            width: 14px;
+            height: 14px;
+            border-radius: 9999px;
+            background: #FF2E63;
+            box-shadow: 0 0 16px rgba(255,46,99,0.8), 0 0 34px rgba(255,46,99,0.4);
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            animation: dotIn 0.6s ease 0.8s both;
+        }
+
+        .no-sign.is-live .no-sign-runner { animation: runnerOut 0.4s ease forwards; }
+
+        .no-sign.is-live .no-sign-slash-svg { animation: slashDraw 0.5s ease 0.1s forwards; }
+
+        .no-sign-halo {
+            position: absolute;
+            inset: -9px;
+            border: 1.5px dashed rgba(255,46,99,0.35);
+            border-radius: 9999px;
+            opacity: 0;
+        }
+
+        .no-sign.is-live .no-sign-halo {
+            animation: haloIn 0.6s ease 0.3s forwards,
+                       noSignSpin 14s linear 0.3s infinite;
+        }
+
+        @keyframes dotIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        @keyframes runnerOut {
+            to { opacity: 0; }
+        }
+
+        @keyframes slashDraw {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes haloIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes noSignGlow {
+            0%, 100% { box-shadow: 0 0 18px rgba(255,46,99,0.4), 0 0 44px rgba(127,29,29,0.25); }
+            50% { box-shadow: 0 0 32px rgba(255,46,99,0.65), 0 0 70px rgba(127,29,29,0.4); }
+        }
+
+        @keyframes noSignBreathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+
+        @keyframes noSignSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Verdict card: dark burgundy neon — deep maroon base, glowing crimson edge.
+           The verdict title still flickers like a broken neon sign, now tinted
+           burgundy instead of pink/purple, and the buttons share the same burgundy glow. */
+        @keyframes synthFlicker {
+            0%, 100% { opacity: 1; transform: translateX(0); text-shadow: 0 0 18px rgba(255,30,70,0.7), 2px 0 0 rgba(128,0,32,0.6), -2px 0 0 rgba(255,80,100,0.35); }
+            7% { opacity: 0.55; transform: translateX(-1px); }
+            9% { opacity: 1; transform: translateX(1px); }
+            34% { opacity: 0.85; }
+            36% { opacity: 1; transform: translateX(0); text-shadow: 0 0 26px rgba(255,30,70,0.85), -2px 0 0 rgba(128,0,32,0.65), 2px 0 0 rgba(255,80,100,0.4); }
+            61% { opacity: 0.65; transform: translateX(1px); }
+            63% { opacity: 1; transform: translateX(0); }
+            81% { opacity: 0.9; }
+        }
+
+        @keyframes synthGlow {
+            0%, 100% { box-shadow: 0 0 18px rgba(255,30,70,0.5), 0 0 42px rgba(128,0,32,0.35); }
+            50% { box-shadow: 0 0 30px rgba(255,30,70,0.65), 0 0 64px rgba(128,0,32,0.45); }
+        }
+
+        .synth-verdict {
+            background: linear-gradient(135deg, #42060F 0%, #800020 48%, #B3122F 130%);
+            box-shadow: 0 0 42px rgba(255,30,70,0.5), 0 0 90px rgba(128,0,32,0.45);
+        }
+
+        .synth-verdict #verdictTitle { animation: synthFlicker 4.2s linear infinite; }
+
+        .synth-glow { animation: synthGlow 3.2s ease-in-out infinite; }
+
+        /* Synthwave shine sweep for coloured buttons: a diagonal light streak
+           runs across the button every few seconds (live), and turns brighter
+           on hover for extra shine. Clipped to the button's rounded corners. */
+        .btn-shine { position: relative; overflow: hidden; }
+
+        .btn-shine::after {
+            content: "";
+            position: absolute;
+            top: 0; bottom: 0; width: 40%;
+            background: linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.22) 50%, transparent 100%);
+            transform: skewX(-20deg) translateX(-220%);
+            animation: btnShine 3.8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .btn-shine:hover::after {
+            background: linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.38) 50%, transparent 100%);
+        }
+
+        @keyframes btnShine {
+            0%, 55% { transform: skewX(-20deg) translateX(-220%); }
+            85%, 100% { transform: skewX(-20deg) translateX(420%); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .synth-verdict #verdictTitle, .synth-glow { animation: none; }
+            .btn-shine::after { animation: none; }
+            .no-sign-runner { display: none; }
+            .no-sign-base { opacity: 1; }
+            .no-sign.is-live .no-sign-slash-svg { animation: none; stroke-dashoffset: 0; }
+            .no-sign.is-live .no-sign-halo { animation: none; opacity: 1; }
+            .no-sign.is-live { animation: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Starfield background (Canvas2D, SkillBridge-style) — fixed behind all content -->
+    <canvas id="starfield" class="fixed inset-0 z-0 pointer-events-none"></canvas>
+
+    <div class="relative z-10 min-h-screen selection-coral overflow-x-hidden">
+
+        <!-- Top Navigation -->
+        <nav id="topNav" class="nav-enter fixed top-0 left-0 right-0 z-[100] px-6 py-6 flex items-center justify-between text-sm font-medium tracking-tight">
+            <div class="flex items-center gap-10">
+                <a href="#" class="flex items-center group">
+                    <div class="nav-logo w-8 h-8 bg-white rounded flex items-center justify-center text-black font-extrabold text-xl transition-transform group-hover:rotate-12">S.</div>
+                </a>
+
+                <div class="hidden lg:flex items-center gap-8 text-[#888888]">
+                    <span class="nav-brand-text text-white">SableShield</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-8">
+                <a href="#demo" class="px-5 py-2.5 bg-[#1a1a1a] hover:bg-white hover:text-black border border-[#333333] rounded-lg transition-all duration-300">
+                    Try the demo
+                </a>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <header class="relative h-screen w-full flex flex-col items-center justify-center">
+            <div class="absolute inset-0 z-0 pointer-events-none">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_#1a1a1a_0%,_#050505_70%)] opacity-60"></div>
+            </div>
+
+            <div class="relative z-10">
+                <div class="flex items-center justify-center gap-4 md:gap-6">
+                    <h1 class="load-fade load-delay-shield hero-text font-bold text-center shield-gradient">
+                        /shield
+                    </h1>
+                    <div class="no-sign" aria-hidden="true">
+                        <div class="no-sign-base"></div>
+                        <svg class="no-sign-svg" viewBox="0 0 100 100" aria-hidden="true">
+                            <defs>
+                                <linearGradient id="noGrad" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stop-color="#FF2E63" />
+                                    <stop offset="100%" stop-color="#7F1D1D" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="no-sign-trace" cx="50" cy="50" r="46" fill="none" stroke="url(#noGrad)" stroke-width="4" stroke-linecap="round" stroke-dasharray="289.03" stroke-dashoffset="289.03" />
+                            <line class="no-sign-slash-svg" x1="32" y1="32" x2="68" y2="68" stroke="url(#noGrad)" stroke-width="5" stroke-linecap="round" stroke-dasharray="51" stroke-dashoffset="51" />
+                        </svg>
+                        <div class="no-sign-runner"></div>
+                        <div class="no-sign-halo"></div>
+                    </div>
+                </div>
+                <p class="load-fade load-delay-1 text-center text-[#888888] text-base md:text-lg mt-8 max-w-xl mx-auto px-6 leading-relaxed">
+                    Live scam-call detection. On-device, private, open-weight.
+                </p>
+                <div class="load-fade load-delay-2 flex gap-2 justify-center mt-8 flex-wrap px-6">
+                    <span class="bg-[#1a1a1a] text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest text-[#888888] border border-[#333333]">Open-weight AI</span>
+                    <span class="bg-[#1a1a1a] text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest text-[#888888] border border-[#333333]">On-device · Private</span>
+                    <span class="bg-[#1a1a1a] text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest text-[#888888] border border-[#333333]">Gemma 4</span>
+                    <span class="bg-[#1a1a1a] text-[10px] font-bold px-4 py-2 rounded-full uppercase tracking-widest text-[#888888] border border-[#333333]">Works offline</span>
+                </div>
+            </div>
+
+            <!-- Bottom UI Overlays -->
+            <div class="load-fade load-delay-3 absolute bottom-12 left-8 md:left-12">
+                <p class="text-xs md:text-sm font-medium leading-tight text-[#888888]">
+                    AI listens live —<br/>and stops the scam before your money is gone.
+                </p>
+            </div>
+
+            <div class="load-fade load-delay-3 absolute bottom-12 right-8 md:right-12 text-right">
+                <p class="text-white font-medium">
+                    Every year, scammers steal billions.
+                </p>
+            </div>
+        </header>
+
+        <!-- Demo Section -->
+        <section id="demo" class="py-32 px-6 md:px-12 max-w-7xl mx-auto">
+            <div class="reveal flex items-center gap-3 mb-10">
+                <div class="w-2 h-2 rounded-full bg-[#FF2E63] animate-pulse"></div>
+                <span class="text-[10px] font-bold tracking-[0.3em] text-[#666666] uppercase">Live demo — watch it catch a scam</span>
+            </div>
+
+            <h2 class="reveal text-4xl md:text-7xl font-medium leading-[1.05] tracking-tight text-white max-w-5xl mb-12">
+                A scam call is happening. <span class="text-[#666666]">AI stops it before your money is gone.</span>
+            </h2>
+
+            <p class="reveal text-[#888888] text-base md:text-lg leading-relaxed max-w-2xl mb-16">
+                Every year, scammers steal billions from ordinary people — especially the elderly.
+                By the time you realise it was a scam, the money is gone.
+                SableShield catches it <span class="text-white">during</span> the call, not after.
+            </p>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-start">
+                <div>
+                <!-- Call Screen -->
+                <div class="reveal bg-[#111111] rounded-[2.5rem] p-8 md:p-10 relative overflow-hidden">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div id="avatar" class="w-14 h-14 rounded-full bg-[#1a1a1a] border border-[#333333] flex items-center justify-center text-2xl font-extrabold text-white shrink-0">?</div>
+                        <div class="flex-1 min-w-0">
+                            <div id="callerName" class="text-lg font-bold tracking-tight text-white">No active call</div>
+                            <div id="callerNum" class="text-sm text-[#888888] mt-0.5">Tap a demo below to simulate a call</div>
+                        </div>
+                        <div id="callStatus" class="px-3 py-1.5 rounded-md text-[11px] font-bold tracking-wider uppercase bg-[#1a1a1a] text-[#888888] whitespace-nowrap">IDLE</div>
+                    </div>
+
+                    <div id="transcript" class="min-h-[110px] mb-4">
+                        <div id="transcriptEmpty" class="text-center text-[#666666] text-[15px] leading-relaxed px-2.5 py-7">Start a demo call —<br>the transcript will appear here live,<br>and AI will flag every red flag as it speaks.</div>
+                    </div>
+
+                    <div id="verdict" class="hidden">
+                        <div id="verdictTitle" class="text-3xl font-bold tracking-tight uppercase leading-tight">—</div>
+                        <div id="verdictScore" class="text-5xl font-extrabold tracking-tighter mt-2">—</div>
+                        <div id="verdictSub" class="text-[15px] leading-relaxed mt-3 opacity-90">—</div>
+                    </div>
+
+                    <div id="flagsCard" style="display:none" class="bg-[#1a1a1a] border border-[#333333] rounded-3xl p-6 mb-3">
+                        <h3 class="text-base font-bold uppercase tracking-tight mb-2 text-[#FF6B8A]">Red flags detected</h3>
+                        <ul id="flagsList" class="pl-5 space-y-1.5 text-[15px] leading-relaxed text-[#d8d8d8] list-disc marker:text-[#666666]"></ul>
+                    </div>
+                    <div id="safeCard" style="display:none" class="bg-[#1a1a1a] border border-[#333333] rounded-3xl p-6 mb-3">
+                        <h3 class="text-base font-bold uppercase tracking-tight mb-2 text-[#A3C585]">Why this looks safe</h3>
+                        <ul id="safeList" class="pl-5 space-y-1.5 text-[15px] leading-relaxed text-[#d8d8d8] list-disc marker:text-[#666666]"></ul>
+                    </div>
+
+                    <div id="callActions" style="display:none" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <button onclick="hangUp()" class="px-5 py-4 bg-[#800020] hover:bg-[#5C0A18] text-white font-bold text-sm tracking-wide uppercase rounded-xl transition-all synth-glow btn-shine">Hang up now</button>
+                        <button onclick="reportScam()" class="px-5 py-4 bg-[#1a1a1a] hover:bg-white hover:text-black border border-[#333333] text-white font-bold text-sm tracking-wide uppercase rounded-xl transition-all">Report scam</button>
+                    </div>
+                </div>
+
+                <!-- Demo Buttons: two cards side-by-side, not table rows -->
+                <div class="reveal grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5">
+                    <button onclick="runDemo('scam')" class="synth-glow btn-shine px-6 py-5 bg-[#800020] hover:bg-[#5C0A18] text-white rounded-2xl transition-all hover:-translate-y-0.5 flex flex-col items-center gap-1">
+                        <span class="font-bold text-sm tracking-wide uppercase">Demo: Scam call</span>
+                        <span class="text-xs font-normal normal-case tracking-normal opacity-80">Bank OTP fraud — watch AI catch it live</span>
+                    </button>
+                    <button onclick="runDemo('safe')" class="btn-shine px-6 py-5 bg-[#1a1a1a] hover:bg-white hover:text-black border border-[#333333] text-white rounded-2xl transition-all hover:-translate-y-0.5 flex flex-col items-center gap-1">
+                        <span class="font-bold text-sm tracking-wide uppercase">Demo: Safe call</span>
+                        <span class="text-xs font-normal normal-case tracking-normal opacity-80">Real bank — see why it passes</span>
+                    </button>
+                </div>
+                <button onclick="resetCall()" class="reveal reveal-delay-2 block mx-auto px-6 py-2.5 bg-transparent hover:text-white border border-[#222222] text-[#888888] font-bold text-xs tracking-wide uppercase rounded-full transition-all mt-4">Reset</button>
+                </div>
+
+                <!-- Important info (right, for the upper demo) -->
+                <div>
+                    <span class="text-[10px] font-bold tracking-[0.3em] text-[#666666] uppercase">Important — how it works</span>
+                    <h3 class="text-2xl md:text-4xl font-medium leading-[1.1] tracking-tight text-white mt-4 mb-10">
+                        AI watches the conversation, <span class="text-[#666666]">not the number.</span>
+                    </h3>
+                    <div class="space-y-8">
+                        <div>
+                            <p class="text-white font-bold">Live, not after</p>
+                            <p class="text-[#888888] leading-relaxed mt-1">The transcript appears line by line, and every scam line is flagged as it is spoken — before money moves, not after.</p>
+                        </div>
+                        <div>
+                            <p class="text-white font-bold">Private by design</p>
+                            <p class="text-[#888888] leading-relaxed mt-1">Open-weight Gemma 4 runs on the device. Audio never leaves the phone — no recording, no storage, and you opt in.</p>
+                        </div>
+                        <div>
+                            <p class="text-white font-bold">Signals it catches</p>
+                            <p class="text-[#888888] leading-relaxed mt-1">OTP demands, “blocked in 2 hours” urgency, “do not tell anyone” isolation, and spoofed caller ID — the patterns behind almost every scam call.</p>
+                        </div>
+                        <div>
+                            <p class="text-white font-bold">Safe calls pass too</p>
+                            <p class="text-[#888888] leading-relaxed mt-1">A legit call is not just cleared — the demo shows exactly why it is safe, so you can trust the verdict both ways.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-start mt-16">
+                <!-- Live-mode info (left, for the lower demo) -->
+                <div>
+                    <span class="text-[10px] font-bold tracking-[0.3em] text-[#666666] uppercase">Live mode — try it yourself</span>
+                    <h3 class="text-2xl md:text-4xl font-medium leading-[1.1] tracking-tight text-white mt-4 mb-10">
+                        Paste a real call. <span class="text-[#666666]">Get a verdict.</span>
+                    </h3>
+                    <div class="space-y-8">
+                        <div>
+                            <p class="text-white font-bold">Test your own words</p>
+                            <p class="text-[#888888] leading-relaxed mt-1">Paste any caller line and the engine scores it live — the same verdict, on words the demo didn't script.</p>
+                        </div>
+                        <div>
+                            <p class="text-white font-bold">Gemma 4 with a free key</p>
+                            <p class="text-[#888888] leading-relaxed mt-1">Add a free Gemini API key and the transcript is analysed live by Gemma 4.</p>
+                        </div>
+                        <div>
+                            <p class="text-white font-bold">Zero fail without one</p>
+                            <p class="text-[#888888] leading-relaxed mt-1">No key? Instant rule-based analysis still runs — OTP, urgency, isolation, and pressure patterns scored on the spot.</p>
+                        </div>
+                        <div>
+                            <p class="text-white font-bold">You confirm every action</p>
+                            <p class="text-[#888888] leading-relaxed mt-1">The app never spends money or sends messages on its own — Hang Up and Report always need your tap.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                <!-- Live Mode -->
+                <div class="reveal bg-[#111111] rounded-[2.5rem] p-8 md:p-10 mt-12">
+                    <label for="liveText" class="block text-[10px] font-bold tracking-[0.2em] uppercase text-[#888888] mb-3">Live mode — test the engine on your own words</label>
+                    <textarea id="liveText" placeholder="e.g. Hello, I'm calling from your bank. Your account will be blocked in 2 hours unless you share the OTP sent to your phone..." class="w-full px-4 py-3 rounded-xl bg-[#1a1a1a] border border-[#333333] focus:border-[#00C2D8] focus:outline-none text-[15px] text-white placeholder:text-[#666666] min-h-[92px]"></textarea>
+                    <input type="password" id="apiKey" placeholder="Gemini API key for live Gemma analysis (optional — blank still works)" class="w-full px-4 py-3 rounded-xl bg-[#1a1a1a] border border-[#333333] focus:border-[#00C2D8] focus:outline-none text-[13px] font-mono text-white placeholder:text-[#666666] mt-3">
+                    <p class="text-xs text-[#666666] mt-2">Free key: <a href="https://aistudio.google.com/apikey" target="_blank" class="text-[#00C2D8]">aistudio.google.com/apikey</a> · Without a key, instant rule-based analysis runs (zero fail). · A key you enter is saved in this browser and loads automatically next time.</p>
+                    <button onclick="analyzeLive()" class="w-full px-6 py-4 bg-[#800020] hover:bg-[#5C0A18] text-white font-bold text-sm tracking-wide uppercase rounded-xl transition-all mt-4 synth-glow btn-shine">Analyse this call</button>
+                    <div id="errorBox" class="hidden mt-3 bg-[rgba(255,46,99,0.12)] border border-[rgba(255,46,99,0.45)] rounded-xl px-4 py-3 text-sm text-[#FF6B8A] text-center"></div>
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="relative pt-24 pb-16 px-6 md:px-12 border-t border-[#1a1a1a]">
+            <div class="reveal max-w-7xl mx-auto">
+                <p class="text-[#666666] text-sm leading-relaxed max-w-2xl">
+                    SableShield is a hackathon prototype. Demo calls are simulated transcripts — a webpage can't tap a live cellular call; production ships as a dialer app or via carrier integration.
+                    Live mode analyses text you paste (or, with a key, via Gemma 4).
+                    The app never spends money or sends messages on its own — you confirm every action.
+                </p>
+                <div class="mt-10 pt-6 border-t border-[#111111] flex flex-col md:flex-row justify-between text-[#333333] text-[10px] font-bold uppercase tracking-widest">
+                    <p>&copy; 2026 SableShield — Hacktoberfest Hack Day Delhi</p>
+                    <p class="mt-4 md:mt-0">Open-source · MIT</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+<script>
+    /* Scroll reveal: elements with .reveal fade/slide in when scrolled into view. */
+    (function () {
+        var els = document.querySelectorAll('.reveal');
+        if (!('IntersectionObserver' in window)) {
+            els.forEach(function (el) { el.classList.add('visible'); });
+            return;
+        }
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    io.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px 200px 0px' });
+        els.forEach(function (el) { io.observe(el); });
+    })();
+</script>
+<script>
+    /* Starfield background (Canvas2D, SkillBridge-style): every star is a radial
+       glow sprite — white-hot core fading into its colour halo — with twinkle,
+       slow drift, and scroll parallax. Sprites are pre-rendered once, so the
+       per-frame cost stays at one drawImage per star (the sprite already
+       carries the white-hot core, so no second pass is needed). */
+    (function () {
+        var canvas = document.getElementById('starfield');
+        if (!canvas || !canvas.getContext) return;
+        var ctx = canvas.getContext('2d');
+        var W = 0, H = 0, DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+        var stars = [];
+        var COLORS = ['255,255,255', '0,240,255', '157,78,221'];
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        function makeGlow(rgb) {
+            var s = document.createElement('canvas');
+            s.width = s.height = 64;
+            var c = s.getContext('2d');
+            var g = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+            g.addColorStop(0, 'rgba(255,255,255,1)');
+            g.addColorStop(0.18, 'rgba(' + rgb + ',0.9)');
+            g.addColorStop(0.4, 'rgba(' + rgb + ',0.38)');
+            g.addColorStop(1, 'rgba(' + rgb + ',0)');
+            c.fillStyle = g;
+            c.fillRect(0, 0, 64, 64);
+            return s;
+        }
+        var SPRITES = {};
+        COLORS.forEach(function (rgb) { SPRITES[rgb] = makeGlow(rgb); });
+        function resize() {
+            W = window.innerWidth; H = window.innerHeight;
+            canvas.width = W * DPR; canvas.height = H * DPR;
+            canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+            ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+            var count = Math.min(120, Math.floor(W * H / 9000));
+            stars = [];
+            for (var i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * W, y: Math.random() * H,
+                    r: 0.5 + Math.random() * 1.4,
+                    c: COLORS[Math.floor(Math.random() * COLORS.length)],
+                    tw: Math.random() * Math.PI * 2, sp: 0.4 + Math.random() * 1.2,
+                    drift: (Math.random() - 0.5) * 0.08, depth: 0.15 + Math.random() * 0.55
+                });
+            }
+        }
+        var lastDraw = 0;
+        function draw(now) {
+            /* 30fps cap: twinkle, drift and parallax are all slow motions, so
+               they look identical at 30fps — but the full-screen canvas costs
+               half the repaints, which leaves the budget free for scrolling. */
+            if (!reduced && now - lastDraw < 33) { requestAnimationFrame(draw); return; }
+            lastDraw = now;
+            ctx.clearRect(0, 0, W, H);
+            var scroll = window.scrollY || 0;
+            for (var i = 0; i < stars.length; i++) {
+                var s = stars[i];
+                var a = 0.7 + 0.3 * (0.5 + 0.5 * Math.sin(now / 1000 * s.sp + s.tw));
+                var y = (s.y + scroll * s.depth) % H;
+                var x = ((s.x + s.drift * (now / 1000)) % W + W) % W;
+                var glow = s.r * 9;
+                ctx.globalAlpha = a;
+                ctx.drawImage(SPRITES[s.c], x - glow / 2, y - glow / 2, glow, glow);
+            }
+            ctx.globalAlpha = 1;
+            if (!reduced) requestAnimationFrame(draw);
+        }
+        resize();
+        if (reduced) draw(0); else requestAnimationFrame(draw);
+        window.addEventListener('resize', resize);
+    })();
+</script>
+<script>
+    /* No-sign runner: the dot starts at the top of the track (the start line),
+       waits beside /shield, then runs one full lap leaving the gradient trace
+       behind it. On lap completion the slash draws in, the runner fades out,
+       and the logo goes live. */
+    (function () {
+        var sign = document.querySelector('.no-sign');
+        var trace = document.querySelector('.no-sign-trace');
+        var runner = document.querySelector('.no-sign-runner');
+        if (!sign || !trace || !runner) return;
+        var C = 2 * Math.PI * 46;
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduced) {
+            trace.setAttribute('stroke-dashoffset', '0');
+            sign.classList.add('is-live');
+            return;
+        }
+        var LAP_START = 3200, LAP_DUR = 1800;
+        setTimeout(function () {
+            sign.classList.add('is-tracing');
+            var t0 = performance.now();
+            function frame(now) {
+                var p = Math.min(1, (now - t0) / LAP_DUR);
+                var ang = -Math.PI / 2 + p * Math.PI * 2;
+                var x = 50 + 46 * Math.cos(ang), y = 50 + 46 * Math.sin(ang);
+                runner.style.left = x + '%';
+                runner.style.top = y + '%';
+                trace.setAttribute('stroke-dashoffset', String(C * (1 - p)));
+                if (p < 1) requestAnimationFrame(frame);
+                else sign.classList.add('is-live');
+            }
+            requestAnimationFrame(frame);
+        }, LAP_START);
+    })();
+</script>
+<script>
+    /* Nav brand on scroll: scrolling down (past a small buffer) fades the
+       SableShield text out and dims the S. logo; scrolling up restores both.
+       rAF-throttled and passive, so it never disturbs scrolling. */
+    (function () {
+        var nav = document.getElementById('topNav');
+        if (!nav) return;
+        var lastY = window.scrollY || 0;
+        var ticking = false;
+        if (lastY > 60) nav.classList.add('nav-compact');
+        function onScroll() {
+            var y = window.scrollY || 0;
+            if (y > lastY && y > 60) nav.classList.add('nav-compact');
+            else if (y < lastY) nav.classList.remove('nav-compact');
+            lastY = y;
+            ticking = false;
+        }
+        window.addEventListener('scroll', function () {
+            if (!ticking) { window.requestAnimationFrame(onScroll); ticking = true; }
+        }, { passive: true });
+    })();
+</script>
+<script src="app.js"></script>
+</body>
+</html>
