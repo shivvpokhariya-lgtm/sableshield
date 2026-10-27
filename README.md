@@ -12,6 +12,12 @@ Every year, scammers steal billions from ordinary people — especially the elde
 By the time you realise it was a scam, the money is gone.
 SableShield catches it **during** the call, not after.
 
+## Presentation — open source, explained
+
+**https://shivvpokhariya-lgtm.github.io/sableshield/SableShield-Explainer.html**
+
+9 slides, opening on a blank screen, then the title: what open source is, where it lives in this app, why only open weights work, how the demo runs, and short answers to the questions judges ask. Open it in a browser and step through with → / Space.
+
 ## The demo (60 seconds)
 
 1. Open `index.html` (or run the server below) and tap **🎭 Demo: Scam Call**.
@@ -63,9 +69,9 @@ This is the core of the project — open weights are not a feature, they are the
 3. **Cost:** Analysing every call via API makes a free product impossible. Open weights cost zero per call — so this can run free on every elderly person's phone.
 4. **Offline:** Scam calls arrive in villages and on weak networks. Cloud AI dies there. On-device Gemma keeps working.
 
-Closed AI fails all four. That is why this project exists as open-source, and why it targets the **Best Open-Source AI Project** prize: open-source AI is the *important part* of how it works, not a side detail.
+Closed AI fails all four. That is why this project exists as open-source: open-source AI is the *important part* of how it works, not a side detail.
 
-Engine: Gemma 4 (Apache 2.0, open weights). Also noted as “Powered by Gemma 4” for the Best Use of Gemma 4 track — the primary pitch is open-source necessity; Gemma is the specific open model used.
+Engine: Gemma 4 (Apache 2.0, open weights) — “Powered by Gemma 4”. Open-source necessity is the point; Gemma is the specific open model used.
 
 ## Privacy design (the question every judge asks)
 
