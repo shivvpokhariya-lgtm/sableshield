@@ -37,7 +37,6 @@
   .counter { position:fixed; left:36px; bottom:34px; z-index:5; color:#888; font-size:13px; letter-spacing:0.1em; }
   .progress { position:fixed; top:0; left:0; height:3px; background:#FF2E63; z-index:6; transition:width 0.7s ease; }
   .foot { position:fixed; right:36px; bottom:36px; z-index:5; color:#666; font-size:12px; }
-  body.blank-first .brand, body.blank-first .foot, body.blank-first .counter, body.blank-first .dots, body.blank-first .nav, body.blank-first .progress { display:none; }
   @media (max-width:700px){ .cards{grid-template-columns:1fr;} .brand{left:20px; top:20px;} }
 </style>
 </head>
@@ -47,9 +46,6 @@
 <div class="brand"><div class="logo-box">S.</div> SableShield</div>
 <div class="deck">
   <section class="slide active">
-    <!-- Blank opener — intentional: advance once to reveal the title -->
-  </section>
-  <section class="slide">
     <div class="kicker">SableShield · Explainer</div>
     <h1><span class="grad">Open source,</span><br>explained simply.</h1>
     <p class="lead">Live scam-call detection. On-device, private, open-weight. This deck exists so you can read it and explain it in your own words to anyone.</p>
@@ -118,7 +114,7 @@
     <div class="say"><b>Say:</b> One line, then stop. Thank you.</div>
   </section>
 </div>
-<div class="counter" id="counter">1 / 9</div>
+<div class="counter" id="counter">1 / 8</div>
 <div class="dots" id="dots"></div>
 <div class="nav"><button id="prev" aria-label="Previous">‹</button><button id="next" aria-label="Next">›</button></div>
 <div class="foot">SableShield — Open Source, Explained</div>
@@ -175,7 +171,6 @@
       if (i < 0) i = 0; if (i >= slides.length) i = slides.length - 1;
       slides[cur].classList.remove('active'); dots[cur].classList.remove('on');
       cur = i;
-      document.body.classList.toggle('blank-first', cur === 0);
       slides[cur].classList.add('active'); dots[cur].classList.add('on');
       counter.textContent = (cur + 1) + ' / ' + slides.length;
       bar.style.width = ((cur + 1) / slides.length * 100) + '%';

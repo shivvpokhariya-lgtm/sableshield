@@ -16,7 +16,7 @@ SableShield catches it **during** the call, not after.
 
 **https://shivvpokhariya-lgtm.github.io/sableshield/SableShield-Explainer.html**
 
-9 slides, opening on a blank screen, then the title: what open source is, where it lives in this app, why only open weights work, how the demo runs, and short answers to the questions judges ask. Open it in a browser and step through with → / Space.
+8 slides: title, problem, what open source is, where it lives in this app, why only open weights work, how the demo runs, short answers to the questions judges ask, and the close. Open it in a browser and step through with → / Space.
 
 ## The demo (60 seconds)
 
