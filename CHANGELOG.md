@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.0 — 2026-10-26 (Hacktoberfest Hack Day Delhi)
+## v1.0 — 2026-10-26 (Initial release)
 - Live scam-call detector web app: simulated scam/safe demos, live transcript analysis.
 - Rule-based fallback analyzer (deterministic, zero fail without a key).
 - Zero-dependency Node backend: `/api/health`, `/api/analyze`, `/api/report`, `/api/reports`.

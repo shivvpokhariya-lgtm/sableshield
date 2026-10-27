@@ -23,7 +23,7 @@ const PORT = process.env.PORT || 3000;
 const ROOT = __dirname;
 
 // --- Community scam reports (in-memory, demo-grade) ---
-// Reports reset when the server restarts. Deliberate for the hackathon:
+// Reports reset when the server restarts (in-memory store, by design):
 // no database, no PII store — just a shared warning list. Numbers are
 // masked before storage so a report can warn others without doxxing.
 const reports = [];

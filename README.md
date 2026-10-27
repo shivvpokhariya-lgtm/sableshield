@@ -97,6 +97,6 @@ PITCH.md     — 2-minute pitch + judge Q&A (privacy + open-source arguments liv
 LICENSE      — MIT
 ```
 
-## Hackathon note (honest)
+## Honest scope
 
-The demo uses scripted transcripts and rule-based analysis for reliability — so it never fails on stage. Live Gemma analysis runs when a key is present — the frontend tries the backend (`/api/analyze`, key stays server-side) first, then a pasted key direct call, then rule-based fallback. The production architecture is on-device Gemma (E2B via Ollama / llama.cpp, as proven by Google AI Edge Gallery); the hackathon build demonstrates the same decision path through the API for reliability. That architecture choice — on-device, private, zero-cost — is precisely what only open weights enable.
+The demo uses scripted transcripts and rule-based analysis for reliability — so it never fails on stage. Live Gemma analysis runs when a key is present — the frontend tries the backend (`/api/analyze`, key stays server-side) first, then a pasted key direct call, then rule-based fallback. The production architecture is on-device Gemma (E2B via Ollama / llama.cpp, as proven by Google AI Edge Gallery); the current build demonstrates the same decision path through the API for reliability. That architecture choice — on-device, private, zero-cost — is precisely what only open weights enable.

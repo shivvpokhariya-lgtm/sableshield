@@ -17,4 +17,4 @@ Remove open weights and the product stops existing. That is why it qualifies as 
 
 ## Honest scope
 - Demo transcripts are scripted (reliability on stage); live mode is the real AI call.
-- The hackathon build reaches Gemma via API for reliability; the production architecture runs the same open weights on-device (llama.cpp / Ollama / AI Edge). The API route does not make the model closed — openness is a property of the weights, not of the access route.
+- The current build reaches Gemma via API for reliability; the production architecture runs the same open weights on-device (llama.cpp / Ollama / AI Edge). The API route does not make the model closed — openness is a property of the weights, not of the access route.
