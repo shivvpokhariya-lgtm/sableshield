@@ -249,6 +249,22 @@ class MainActivity : AppCompatActivity() {
         )
         loadRecentCalls()
         refreshGate()
+        // FIX (2026-10-30): show the last call's scam report here. The
+        // service saves it the moment a scam is detected (see
+        // MicListenService.showScamWarning), so it survives the call
+        // ending and the service stopping.
+        val lastReport = prefs.getString("last_report", "")
+        if (!lastReport.isNullOrEmpty() && mainScroll.visibility == View.VISIBLE) {
+            verdictText.text = "Last call report\n$lastReport"
+            if (prefs.getString("last_type", "") == "scam") {
+                verdictText.setBackgroundResource(R.drawable.verdict_scam_bg)
+            }
+            val lastFlags = prefs.getString("last_flags", "")
+            if (!lastFlags.isNullOrEmpty()) {
+                flagsLabel.text = "Red flags detected"
+                flagsText.text = lastFlags
+            }
+        }
     }
 
     override fun onPause() {

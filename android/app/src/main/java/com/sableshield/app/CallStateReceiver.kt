@@ -87,7 +87,11 @@ class CallStateReceiver : BroadcastReceiver() {
                     }
                     postFullScreenNotification(context, tramp)
                 } else {
-                    postTapNotification(context)
+                    // FIX (2026-10-30): the old tap notification had no
+                    // priority/category, so on many phones it arrived
+                    // silently (or not at all without notification
+                    // permission) and the user saw nothing on a call.
+                    postTapNotification(context, modelOk)
                 }
             }
             TelephonyManager.EXTRA_STATE_IDLE -> {
@@ -99,7 +103,7 @@ class CallStateReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun postTapNotification(context: Context) {
+    private fun postTapNotification(context: Context, modelOk: Boolean = true) {
         val open = Intent(context, MainActivity::class.java).apply {
             action = ACTION_START_LISTENING
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -120,7 +124,12 @@ class CallStateReceiver : BroadcastReceiver() {
         val notif = NotificationCompat.Builder(context, CHANNEL_CALL)
             .setSmallIcon(android.R.drawable.ic_btn_speak_now)
             .setContentTitle(context.getString(R.string.notif_call_title))
-            .setContentText(context.getString(R.string.notif_call_text))
+            .setContentText(
+                if (!modelOk) "Voice model missing or incomplete — tap to open the app and re-download it."
+                else context.getString(R.string.notif_call_text)
+            )
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_CALL)
             .setContentIntent(pending)
             .setAutoCancel(true)
             .build()

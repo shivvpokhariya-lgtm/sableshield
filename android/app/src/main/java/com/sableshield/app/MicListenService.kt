@@ -130,7 +130,12 @@ class MicListenService : Service() {
         lastPartial = ""
         scamNotified = false
         gemmaFired = false
-        createHiddenOverlay()
+        // FIX (2026-10-30): the banner used to be created HIDDEN and only
+        // appeared on the first scam flag, so on a real call the user saw
+        // nothing and concluded listening never started. It now shows
+        // "listening" the moment a call starts, and turns into the scam
+        // warning when a pattern is found.
+        createListeningOverlay()
 
         val wanted = when (lang) {
             ModelDownloader.LANG_HI -> listOf(ModelDownloader.LANG_HI)
@@ -147,7 +152,36 @@ class MicListenService : Service() {
         recording = true
         recordThread = Thread {
             try {
-                val loadedModels = ready.map { Model(ModelDownloader.modelDir(this, it).absolutePath) }
+                // FIX (2026-10-30): load each language separately. The old
+                // code loaded all models in one map{} — one broken model
+                // (e.g. a partial download throwing ENOENT) killed the
+                // whole service silently. Now a broken language is reported
+                // by name and the other language keeps listening.
+                val loadedModels = mutableListOf<Model>()
+                val loadedLangs = mutableListOf<String>()
+                for (langCode in ready) {
+                    try {
+                        loadedModels.add(Model(ModelDownloader.modelDir(this, langCode).absolutePath))
+                        loadedLangs.add(langCode)
+                    } catch (e: Exception) {
+                        val missing = ModelDownloader.missingFiles(
+                            ModelDownloader.modelDir(this, langCode)
+                        )
+                        broadcastStatus(
+                            "Model ($langCode) failed to load (${e.message}" +
+                                (if (missing.isNotEmpty()) "; missing: ${missing.joinToString(", ")}" else "") +
+                                ") — re-download it from the app."
+                        )
+                    }
+                }
+                if (loadedModels.isEmpty()) {
+                    broadcastStatus("Voice model files are incomplete — tap Download in the app to re-download, then call again.")
+                    mainHandler.post { stopSelf() }
+                    return@Thread
+                }
+                if (loadedLangs.size < ready.size) {
+                    broadcastStatus("Listening with ${loadedLangs.joinToString(", ")} only.")
+                }
                 val loadedRecognizers = loadedModels.map { Recognizer(it, SAMPLE_RATE.toFloat()) }
                 models = loadedModels
                 recognizers = loadedRecognizers
@@ -297,9 +331,21 @@ class MicListenService : Service() {
      */
     private fun showScamWarning(verdict: ScamEngine.Verdict) {
         val firstFlag = verdict.flags.firstOrNull() ?: ""
+        // FIX (2026-10-30): save the scam report now, while the call is
+        // live. When the call ends the service stops and the transcript
+        // is gone — without this, the user opened the app after the call
+        // and found no report at all. MainActivity shows this on next open.
+        try {
+            getSharedPreferences("sableshield", Context.MODE_PRIVATE).edit()
+                .putString("last_type", "scam")
+                .putString("last_report", "${verdict.score} — ${verdict.title}")
+                .putString("last_flags", verdict.flags.joinToString("\n") { "• $it" })
+                .apply()
+        } catch (ignored: Exception) {
+        }
         mainHandler.post {
             overlayView?.let { view ->
-                view.text = "This is likely to be a scam\n${verdict.score}"
+                view.text = "This is likely to be a scam\n${verdict.score}\n$firstFlag"
                 view.setBackgroundColor(Color.parseColor("#800020"))
                 if (!overlayVisible) {
                     overlayVisible = true
@@ -374,18 +420,18 @@ class MicListenService : Service() {
         }
     }
 
-    private fun createHiddenOverlay() {
+    private fun createListeningOverlay() {
         if (!Settings.canDrawOverlays(this)) return
         try {
             val wm = getSystemService(WINDOW_SERVICE) as WindowManager
             windowManager = wm
             val view = TextView(this).apply {
-                text = ""
+                text = "SableShield is listening — keep the call on speaker"
                 setTextColor(Color.WHITE)
                 textSize = 16f
                 setPadding(32, 24, 32, 24)
-                setBackgroundColor(Color.parseColor("#800020"))
-                visibility = TextView.GONE
+                setBackgroundColor(Color.parseColor("#1A1A1A"))
+                visibility = TextView.VISIBLE
             }
             val params = WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -400,7 +446,7 @@ class MicListenService : Service() {
             }
             wm.addView(view, params)
             overlayView = view
-            overlayVisible = false
+            overlayVisible = true // listening banner is visible from call start
         } catch (ignored: Exception) {
             overlayView = null
         }
