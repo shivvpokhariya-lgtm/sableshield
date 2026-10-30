@@ -366,6 +366,9 @@ class MainActivity : AppCompatActivity() {
         mainScroll.visibility = View.VISIBLE
         hideGate()
         setStatus("Setup complete — SableShield guards every call.")
+        // DIRECT LISTENING: install the bundled voice model at once,
+        // so a call after this needs no Download tap at all.
+        installMissingModels()
     }
 
     private fun playDemo(lines: List<Pair<String, String>>) {
@@ -501,6 +504,43 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    // ---------- bundled voice model (no download needed) ----------
+
+    private var installingModels = false
+
+    private fun installMissingModels(onDone: (() -> Unit)? = null) {
+        val lang = selectedLang()
+        val missing = when (lang) {
+            ModelDownloader.LANG_HI -> listOf(ModelDownloader.LANG_HI)
+            ModelDownloader.LANG_EN -> listOf(ModelDownloader.LANG_EN)
+            else -> listOf(ModelDownloader.LANG_EN, ModelDownloader.LANG_HI)
+        }.filter { !ModelDownloader.isDownloaded(this, it) }
+        if (missing.isEmpty()) {
+            onDone?.invoke()
+            return
+        }
+        if (installingModels) return
+        installingModels = true
+        setStatus("Setting up voice model from the app itself (no download needed)…")
+        installNextModel(missing, onDone)
+    }
+
+    private fun installNextModel(remaining: List<String>, onDone: (() -> Unit)?) {
+        if (remaining.isEmpty()) {
+            installingModels = false
+            setStatus("Voice model ready — listening can start directly.")
+            onDone?.invoke()
+            return
+        }
+        ModelDownloader.installBundled(this, remaining.first()) { ok, msg ->
+            if (ok) installNextModel(remaining.drop(1), onDone)
+            else {
+                installingModels = false
+                setStatus("Bundled model failed: $msg — tap Download to fetch it online.")
+            }
+        }
+    }
+
     // ---------- live mic ----------
 
     private fun startListening() {
@@ -519,9 +559,15 @@ class MainActivity : AppCompatActivity() {
                 ModelDownloader.isDownloaded(this, ModelDownloader.LANG_HI)
         }
         if (!ready) {
-            setStatus("Download the voice model first (Download button).")
+            // DIRECT LISTENING: never block on a Download tap — install
+            // the bundled model, then start listening automatically.
+            installMissingModels { startListeningService(lang) }
             return
         }
+        startListeningService(lang)
+    }
+
+    private fun startListeningService(lang: String) {
         transcriptBuffer.clear()
         transcriptText.text = getString(R.string.transcript_hint)
         flagsText.text = getString(R.string.flags_hint)

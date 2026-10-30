@@ -125,7 +125,7 @@ class CallStateReceiver : BroadcastReceiver() {
             .setSmallIcon(android.R.drawable.ic_btn_speak_now)
             .setContentTitle(context.getString(R.string.notif_call_title))
             .setContentText(
-                if (!modelOk) "Voice model missing or incomplete — tap to open the app and re-download it."
+                if (!modelOk) "Voice model not set up yet — tap to open the app, it installs itself and starts listening."
                 else context.getString(R.string.notif_call_text)
             )
             .setPriority(NotificationCompat.PRIORITY_HIGH)

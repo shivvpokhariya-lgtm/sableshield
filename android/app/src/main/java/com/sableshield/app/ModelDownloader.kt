@@ -122,34 +122,78 @@ object ModelDownloader {
                     done(false, "Download incomplete ($read of $total bytes) — check connection and tap Download again.")
                     return@Thread
                 }
-                if (tmp.exists()) tmp.deleteRecursively()
-                tmp.mkdirs()
-                unzip(zipFile, tmp)
-                zipFile.delete()
-                val missing = missingFiles(tmp)
-                if (missing.isNotEmpty()) {
-                    tmp.deleteRecursively()
-                    done(false, "Model files missing after unzip: ${missing.joinToString(", ")} — the model URL may have changed, re-download.")
-                    return@Thread
-                }
-                // Verified complete: swap into place atomically-ish.
-                val finalDir = modelDir(appContext, lang)
-                if (finalDir.exists()) finalDir.deleteRecursively()
-                if (!tmp.renameTo(finalDir)) {
-                    // renameTo can fail across filesystems; fall back to copy.
-                    tmp.copyRecursively(finalDir, overwrite = true)
-                    tmp.deleteRecursively()
-                }
-                if (isDownloaded(appContext, lang)) {
-                    done(true, "Model ready ($lang)")
-                } else {
-                    done(false, "Model could not be installed — tap Download again.")
-                }
+                installFromZip(zipFile, lang, appContext, done)
             } catch (e: Exception) {
                 try { tmp.deleteRecursively() } catch (ignored: Exception) { }
                 done(false, "Download error (${e.javaClass.simpleName}): ${e.message} — check connection and tap Download again.")
             }
         }.start()
+    }
+
+    /**
+     * DIRECT LISTENING (2026-10-30): install a voice model bundled in
+     * the APK itself (assets/models/vosk-model-<lang>.zip). No network,
+     * no alphacephei download, no ENOENT from a partial download — the
+     * model is already on the phone the moment the app is installed.
+     * Falls back to the network download only if the asset is absent.
+     */
+    fun installBundled(
+        context: Context,
+        lang: String,
+        onDone: (Boolean, String) -> Unit
+    ) {
+        val appContext = context.applicationContext
+        Thread {
+            val main = Handler(Looper.getMainLooper())
+            fun done(ok: Boolean, msg: String) = main.post { onDone(ok, msg) }
+            try {
+                val cacheDir = appContext.cacheDir
+                if (!cacheDir.exists()) cacheDir.mkdirs()
+                val zipFile = File(cacheDir, "vosk-model-$lang.zip")
+                appContext.assets.open("models/vosk-model-$lang.zip").use { input ->
+                    FileOutputStream(zipFile).use { out -> input.copyTo(out) }
+                }
+                installFromZip(zipFile, lang, appContext, done)
+            } catch (e: Exception) {
+                done(false, "Bundled model not available (${e.javaClass.simpleName}) — use Download instead.")
+            }
+        }.start()
+    }
+
+    /** Unzip + verify + swap a zip into place. Shared by download and bundled install. */
+    private fun installFromZip(
+        zipFile: File,
+        lang: String,
+        appContext: Context,
+        done: (Boolean, String) -> Unit
+    ) {
+        val tmp = tempDir(appContext, lang)
+        try {
+            if (tmp.exists()) tmp.deleteRecursively()
+            tmp.mkdirs()
+            unzip(zipFile, tmp)
+            zipFile.delete()
+            val missing = missingFiles(tmp)
+            if (missing.isNotEmpty()) {
+                tmp.deleteRecursively()
+                done(false, "Model files missing after unzip: ${missing.joinToString(", ")}")
+                return
+            }
+            val finalDir = modelDir(appContext, lang)
+            if (finalDir.exists()) finalDir.deleteRecursively()
+            if (!tmp.renameTo(finalDir)) {
+                tmp.copyRecursively(finalDir, overwrite = true)
+                tmp.deleteRecursively()
+            }
+            if (isDownloaded(appContext, lang)) {
+                done(true, "Model ready ($lang)")
+            } else {
+                done(false, "Model could not be installed — try again.")
+            }
+        } catch (e: Exception) {
+            try { tmp.deleteRecursively() } catch (ignored: Exception) { }
+            done(false, "Model install error (${e.javaClass.simpleName}): ${e.message}")
+        }
     }
 
     private fun unzip(zipFile: File, destDir: File) {
