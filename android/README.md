@@ -29,6 +29,8 @@ The goal is a full call companion: live verdicts on every call, a verdict banner
 
 Verified on emulator: landing → start page → demo (real-engine verdict) → setup complete → main screen; EN+HI models downloaded; all permissions granted; receiver registered; launcher icon (white `S.` box).
 
+Repo note: the launcher foreground ships here as a vector drawable (`res/drawable/ic_launcher_foreground.xml`) — the same S. box design — so the repo builds with no binary PNG. The emulator build uses a rendered PNG of the same design.
+
 Pending (needs a real Android phone): auto-start on a real call, live verdict from real speech, banner over a real dialer, 20-second silence note live, pressure signal live, Gemma confirmation (needs the user's own key, typed in-app).
 
 ## Permissions

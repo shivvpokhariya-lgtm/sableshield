@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Launcher foreground: the S. box logo, as a vector so the repo needs no binary PNG.
+     White rounded square + bold black "S." stroke + dot, matching the app icon. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="432dp"
+    android:height="432dp"
+    android:viewportWidth="432"
+    android:viewportHeight="432">
+    <!-- white rounded box, inset 66, 300x300, radius 40 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M106,66 H326 Q366,66 366,106 V326 Q366,366 326,366 H106 Q66,366 66,326 V106 Q66,66 106,66 Z" />
+    <!-- bold S, drawn as a single stroke -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#000000"
+        android:strokeWidth="30"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M278,140 C252,108 168,104 158,150 C148,196 202,210 240,226 C278,242 290,260 274,296 C258,330 176,330 150,300" />
+    <!-- the dot of "S." -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M300,296 m-15,0 a15,15 0 1,0 30,0 a15,15 0 1,0 -30,0" />
+</vector>
