@@ -1,0 +1,1038 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SableShield, on Android — the deployed site's layout, adapted for a
+  phone screen: nav (S. box + SableShield + Try the demo), /shield hero
+  with the no-sign runner logo, tagline, badge pills, overlay lines,
+  live-call status, demo call card, how-it-works, live mode, live mic,
+  permissions, recent calls, report, footer. Pure English throughout.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg">
+
+    <com.sableshield.app.StarfieldView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ScrollView
+        android:id="@+id/mainScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Top nav: S. box + SableShield + Try the demo -->
+            <LinearLayout
+                android:id="@+id/navRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/s_box"
+                    android:gravity="center"
+                    android:text="S."
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="SableShield"
+                    android:textColor="@color/text"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <!-- Hero: /shield + no-sign runner logo -->
+            <LinearLayout
+                android:id="@+id/heroRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/heroText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="-0.05"
+                    android:text="/shield"
+                    android:textColor="#FFFFFF"
+                    android:textSize="56sp"
+                    android:textStyle="bold" />
+
+                <com.sableshield.app.NoSignView
+                    android:id="@+id/noSignView"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="12dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/taglineText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="@string/tagline"
+                android:textColor="@color/muted"
+                android:textSize="15sp" />
+
+            <!-- Badge pills, like the site -->
+            <LinearLayout
+                android:id="@+id/badgesRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/badge_bg"
+                    android:letterSpacing="0.12"
+                    android:padding="6dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:text="OPEN-WEIGHT AI"
+                    android:textColor="@color/muted"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/badge_bg"
+                    android:letterSpacing="0.12"
+                    android:padding="6dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:text="ON-DEVICE · PRIVATE"
+                    android:textColor="@color/muted"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/badge_bg"
+                    android:letterSpacing="0.12"
+                    android:padding="6dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:text="GEMMA 4"
+                    android:textColor="@color/muted"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/badge_bg"
+                    android:letterSpacing="0.12"
+                    android:padding="6dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:text="WORKS OFFLINE"
+                    android:textColor="@color/muted"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Bottom overlay lines -->
+            <LinearLayout
+                android:id="@+id/overlaysRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/overlay_left"
+                    android:textColor="@color/muted"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="@string/overlay_right"
+                    android:textColor="@color/text"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Live-call status -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:letterSpacing="0.3"
+                android:text="LIVE CALL"
+                android:textColor="@color/faint"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/statusText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/card_bg"
+                android:padding="20dp"
+                android:text="@string/status_idle"
+                android:textColor="@color/text"
+                android:textSize="14sp" />
+
+            <!-- Demo section -->
+            <LinearLayout
+                android:id="@+id/demoSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:orientation="vertical">
+
+
+
+                <!-- Call screen card -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:background="@drawable/call_card_bg"
+                    android:orientation="vertical"
+                    android:padding="28dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
+                            android:background="@drawable/card_bg"
+                            android:gravity="center"
+                            android:text="?"
+                            android:textColor="@color/text"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="No active call"
+                                android:textColor="@color/text"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Start listening below, or wait for a call"
+                                android:textColor="@color/muted"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/badge_bg"
+                            android:letterSpacing="0.12"
+                            android:padding="6dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
+                            android:text="IDLE"
+                            android:textColor="@color/muted"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/transcriptText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:minHeight="110dp"
+                        android:text="@string/transcript_hint"
+                        android:textColor="@color/text"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/verdictText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/card_bg"
+                        android:padding="20dp"
+                        android:text="Verdict will appear here"
+                        android:textColor="@color/text"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/flagsLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="Red flags detected"
+                        android:textColor="@color/flag"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/flagsText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/card_bg"
+                        android:minHeight="80dp"
+                        android:padding="20dp"
+                        android:text="@string/flags_hint"
+                        android:textColor="@color/flag"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnHangUp"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/btn_burgundy"
+                            android:backgroundTint="@null"
+                            android:letterSpacing="0.04"
+                            android:text="@string/btn_hangup"
+                            android:textColor="#FFFFFF"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/btnReportScam"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/btn_dark"
+                            android:backgroundTint="@null"
+                            android:letterSpacing="0.04"
+                            android:text="@string/btn_report_scam"
+                            android:textColor="@color/text"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+
+
+
+            </LinearLayout>
+
+            <!-- Important — how it works -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:letterSpacing="0.3"
+                android:text="IMPORTANT — HOW IT WORKS"
+                android:textColor="@color/faint"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="AI watches the conversation, not the number."
+                android:textColor="@color/text"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Live, not after"
+                android:textColor="@color/text"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="The transcript appears line by line, and every scam line is flagged as it is spoken — before money moves, not after."
+                android:textColor="@color/muted"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Private by design"
+                android:textColor="@color/text"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Open-weight Gemma 4 runs on the device. Audio never leaves the phone — no recording, no storage, and you opt in."
+                android:textColor="@color/muted"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Signals it catches"
+                android:textColor="@color/text"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="OTP demands, “blocked in 2 hours” urgency, “do not tell anyone” isolation, and spoofed caller ID — the patterns behind almost every scam call."
+                android:textColor="@color/muted"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Safe calls pass too"
+                android:textColor="@color/text"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="A legit call is not just cleared — you see exactly why it is safe, so you can trust the verdict both ways."
+                android:textColor="@color/muted"
+                android:textSize="14sp" />
+
+            <!-- Live mode — try it yourself -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:letterSpacing="0.3"
+                android:text="LIVE MODE — TRY IT YOURSELF"
+                android:textColor="@color/faint"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Paste a real call."
+                android:textColor="@color/text"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Get a verdict."
+                android:textColor="@color/faint"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Test your own words"
+                android:textColor="@color/text"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Paste any caller line and the engine scores it live — the same verdict, on words you type yourself."
+                android:textColor="@color/muted"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Gemma 4 with a free key"
+                android:textColor="@color/text"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Add a free Gemini API key and the transcript is analysed live by Gemma 4."
+                android:textColor="@color/muted"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Zero fail without one"
+                android:textColor="@color/text"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="No key? Instant rule-based analysis still runs — OTP, urgency, isolation, and pressure patterns scored on the spot."
+                android:textColor="@color/muted"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="You confirm every action"
+                android:textColor="@color/text"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="The app never spends money or sends messages on its own — Hang Up and Report always need your tap."
+                android:textColor="@color/muted"
+                android:textSize="14sp" />
+
+            <!-- Live mode card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/call_card_bg"
+                android:orientation="vertical"
+                android:padding="28dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.2"
+                    android:text="LIVE MODE — TEST THE ENGINE ON YOUR OWN WORDS"
+                    android:textColor="@color/muted"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/liveTextEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/btn_dark"
+                    android:gravity="top"
+                    android:hint="@string/live_hint"
+                    android:minHeight="92dp"
+                    android:padding="16dp"
+                    android:textColor="@color/text"
+                    android:textColorHint="@color/faint"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/apiKeyEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/btn_dark"
+                    android:hint="@string/api_key_hint"
+                    android:inputType="textPassword"
+                    android:padding="16dp"
+                    android:textColor="@color/text"
+                    android:textColorHint="@color/faint"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Free key: aistudio.google.com/apikey · Without a key, instant rule-based analysis runs (zero fail). · A key you enter is saved in this app and loads automatically next time."
+                    android:textColor="@color/faint"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/btnAnalyse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/btn_burgundy"
+                    android:backgroundTint="@null"
+                    android:letterSpacing="0.04"
+                    android:text="@string/btn_analyse"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Live mic -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:letterSpacing="0.3"
+                android:text="LIVE MIC"
+                android:textColor="@color/faint"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/lang_label"
+                android:textColor="@color/muted"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/langGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbEnglish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/lang_en"
+                    android:textColor="@color/text" />
+
+                <RadioButton
+                    android:id="@+id/rbHindi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:text="@string/lang_hi"
+                    android:textColor="@color/text" />
+
+                <RadioButton
+                    android:id="@+id/rbAuto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:text="@string/lang_auto"
+                    android:textColor="@color/text" />
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/btnDownload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/btn_dark"
+                android:backgroundTint="@null"
+                android:letterSpacing="0.04"
+                android:text="@string/btn_download"
+                android:textColor="@color/text"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnStart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_burgundy"
+                android:backgroundTint="@null"
+                android:letterSpacing="0.04"
+                android:text="@string/btn_start"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnStop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_dark"
+                android:backgroundTint="@null"
+                android:letterSpacing="0.04"
+                android:text="@string/btn_stop"
+                android:textColor="@color/text"
+                android:textStyle="bold" />
+
+            <!-- Permissions -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:letterSpacing="0.3"
+                android:text="PERMISSIONS"
+                android:textColor="@color/faint"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Mic, call state, call log, contacts, notifications — all needed. The overlay shows the live verdict above the call screen."
+                android:textColor="@color/muted"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnPermissions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/btn_dark"
+                android:backgroundTint="@null"
+                android:letterSpacing="0.04"
+                android:text="@string/btn_permissions"
+                android:textColor="@color/text"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_dark"
+                android:backgroundTint="@null"
+                android:letterSpacing="0.04"
+                android:text="@string/btn_overlay"
+                android:textColor="@color/text"
+                android:textStyle="bold" />
+
+            <!-- Recent calls -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:letterSpacing="0.3"
+                android:text="RECENT CALLS"
+                android:textColor="@color/faint"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/recentCallsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/card_bg"
+                android:minHeight="80dp"
+                android:padding="20dp"
+                android:text="@string/recent_hint"
+                android:textColor="@color/text2"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnRefreshCalls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_dark"
+                android:backgroundTint="@null"
+                android:letterSpacing="0.04"
+                android:text="@string/btn_refresh_calls"
+                android:textColor="@color/text"
+                android:textStyle="bold" />
+
+            <!-- Report a number -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:letterSpacing="0.3"
+                android:text="REPORT A NUMBER"
+                android:textColor="@color/faint"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/reportNumberEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/btn_dark"
+                android:hint="@string/report_hint"
+                android:inputType="phone"
+                android:padding="16dp"
+                android:textColor="@color/text"
+                android:textColorHint="@color/faint"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/btnReport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_burgundy"
+                android:backgroundTint="@null"
+                android:letterSpacing="0.04"
+                android:text="@string/btn_report"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <!-- Footer, like the site -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:text="SableShield is a prototype. No third-party app can tap a live cellular call — this app listens through the microphone while the call is on speaker. Production ships as a dialer app or via carrier integration. Live mode analyses text you paste (or, with a key, via Gemma 4). The app never spends money or sends messages on its own — you confirm every action."
+                android:textColor="@color/faint"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.12"
+                    android:text="© 2026 SABLESHIELD"
+                    android:textColor="@color/faint"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.12"
+                    android:text="OPEN-SOURCE · MIT"
+                    android:textColor="@color/faint"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Permissions page: full-screen gate over the main content until
+         the runtime permissions are granted (or skipped). Overlay gets
+         its own button — it is what makes automatic call listening
+         possible, so it is asked for explicitly, not buried. -->
+    <ScrollView
+        android:id="@+id/permissionGate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg"
+        android:fillViewport="true"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.3"
+            android:text="GET STARTED"
+            android:textColor="@color/faint"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Start using SableShield"
+            android:textColor="@color/text"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="See how it works, then set it up once — after that it guards every call automatically. It will ask for mic, phone, notifications and display over other apps."
+            android:textColor="@color/muted"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="• Microphone — hear the call on speaker\n• Phone state — detect when a call starts and ends\n• Call log and contacts — recent calls and reported numbers\n• Notifications — slide-in scam warnings\n• Display over other apps — warning above the call screen, and what makes automatic start possible"
+            android:textColor="@color/text2"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/btnShowDemo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/btn_dark"
+            android:backgroundTint="@null"
+            android:letterSpacing="0.04"
+            android:text="@string/btn_show_demo"
+            android:textColor="@color/text"
+            android:textStyle="bold" />
+
+        <!-- Demo card: hidden until the user taps Show demo. -->
+        <LinearLayout
+            android:id="@+id/demoCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/card_bg"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.3"
+                android:text="@string/demo_label"
+                android:textColor="@color/faint"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnDemoScam"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_burgundy"
+                    android:backgroundTint="@null"
+                    android:letterSpacing="0.04"
+                    android:text="@string/btn_demo_scam"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnDemoSafe"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_dark"
+                    android:backgroundTint="@null"
+                    android:letterSpacing="0.04"
+                    android:text="@string/btn_demo_safe"
+                    android:textColor="@color/text"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/demoTranscriptText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:minHeight="80dp"
+                android:text="Tap a demo above — the transcript will appear here live."
+                android:textColor="@color/text"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/demoVerdictText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/card_bg"
+                android:padding="16dp"
+                android:text="Verdict will appear here"
+                android:textColor="@color/text"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/demoFlagsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text=""
+                android:textColor="@color/flag"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/cbPolicy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/policy_accept"
+            android:textColor="@color/text2"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnStartUsing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/btn_burgundy"
+            android:backgroundTint="@null"
+            android:letterSpacing="0.04"
+            android:text="@string/btn_start_using"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/gateStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text=""
+            android:textColor="@color/muted"
+            android:textSize="13sp" />
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

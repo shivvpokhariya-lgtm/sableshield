@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pure English — every string matches the deployed SableShield site copy. -->
+<resources>
+    <string name="app_name">SableShield</string>
+    <string name="title">SableShield — Live Scam Call Detector</string>
+    <string name="tagline">Live scam-call detection. On-device, private, open-weight.</string>
+    <string name="overlay_left">AI listens live —
+and stops the scam before your money is gone.</string>
+    <string name="overlay_right">Every year, scammers steal billions.</string>
+    <string name="lang_label">Call language</string>
+    <string name="lang_en">English</string>
+    <string name="lang_hi">Hindi</string>
+    <string name="lang_auto">Auto — English + Hindi</string>
+    <string name="btn_use_sableshield">Use SableShield</string>
+    <string name="api_key_hint">Gemini API key for live Gemma analysis (optional — blank still works)</string>
+    <string name="live_hint">e.g. Hello, I am calling from your bank. Your account will be blocked in 2 hours unless you share the OTP sent to your phone…</string>
+    <string name="btn_analyse">Analyse this call</string>
+    <string name="btn_hangup">Hang up now</string>
+    <string name="btn_report_scam">Report scam</string>
+    <string name="btn_reset">Reset</string>
+    <string name="btn_download">Download voice model</string>
+    <string name="btn_start">Start listening</string>
+    <string name="btn_stop">Stop</string>
+    <string name="btn_permissions">Request all permissions</string>
+    <string name="btn_overlay">Allow overlay permission (warning over calls)</string>
+    <string name="btn_refresh_calls">Refresh recent calls</string>
+    <string name="btn_report">Report this number</string>
+    <string name="report_hint">Number to report (blank = last call’s number)</string>
+    <string name="recent_hint">Recent calls will appear here…</string>
+    <string name="status_idle">IDLE — no call being listened to</string>
+    <string name="transcript_hint">Transcript will appear here as the call is listened to.</string>
+    <string name="flags_hint">Red flags will appear here…</string>
+    <string name="notif_channel">Call protection</string>
+    <string name="notif_title">SableShield is listening</string>
+    <string name="notif_text">Keep the call on speaker — you will be warned the moment a scam is detected.</string>
+    <string name="notif_call_title">Call in progress</string>
+    <string name="notif_call_text">Tap to start SableShield listening.</string>
+    <string name="notif_scam_title">This is likely to be a scam</string>
+    <string name="btn_show_demo">Show demo</string>
+    <string name="btn_start_using">Start using SableShield</string>
+    <string name="btn_demo_scam">Demo: Scam call</string>
+    <string name="btn_demo_safe">Demo: Safe call</string>
+    <string name="policy_accept">I accept the privacy policy: audio never leaves this phone, nothing is recorded or stored, transcription runs on-device.</string>
+    <string name="demo_label">DEMO — SEE IT WORK</string>
+    <string name="notif_fsi_text">SableShield is listening — tap to open.</string>
+</resources>

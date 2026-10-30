@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Site .synth-verdict: 135deg #42060F -> #800020 -> #B3122F. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="135"
+        android:startColor="@color/verdict_start"
+        android:centerColor="@color/burgundy"
+        android:endColor="@color/verdict_end"
+        android:type="linear" />
+    <corners android:radius="24dp" />
+</shape>

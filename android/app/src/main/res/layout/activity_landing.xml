@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SableShield landing — shield only, nothing else. The site's /shield
+  hero + live no-sign logo, and one "Use SableShield" button below it
+  (same burgundy button style as the rest of the app). No tagline,
+  no badges, no overlay lines, no extra info on this screen.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg">
+
+    <com.sableshield.app.StarfieldView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/landingHeroText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="-0.05"
+                android:text="/shield"
+                android:textColor="#FFFFFF"
+                android:textSize="64sp"
+                android:textStyle="bold" />
+
+            <com.sableshield.app.NoSignView
+                android:id="@+id/landingNoSign"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:layout_marginStart="12dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnUseSableShield"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:background="@drawable/btn_burgundy"
+            android:backgroundTint="@null"
+            android:letterSpacing="0.04"
+            android:text="@string/btn_use_sableshield"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</FrameLayout>

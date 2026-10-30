@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SableShield — Open Source, Explained</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; background:#050505; color:#fff; font-family:'Poppins',system-ui,-apple-system,sans-serif; }
+  #starfield { position:fixed; inset:0; z-index:0; }
+  .deck { position:relative; z-index:1; height:100%; }
+  .slide { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding:6vw 8vw; opacity:0; transform:translateY(24px) scale(0.985); transition:opacity 0.7s ease, transform 0.7s ease; pointer-events:none; }
+  .slide.active { opacity:1; transform:none; pointer-events:auto; }
+  .brand { position:fixed; top:28px; left:36px; z-index:5; display:flex; align-items:center; gap:12px; font-weight:700; font-size:18px; }
+  .logo-box { width:34px; height:34px; background:#fff; color:#000; display:flex; align-items:center; justify-content:center; font-weight:800; border-radius:8px; }
+  .kicker { font-size:13px; letter-spacing:0.28em; text-transform:uppercase; color:#FF2E63; font-weight:700; margin-bottom:18px; }
+  h1 { font-size:clamp(44px, 7vw, 96px); line-height:0.95; letter-spacing:-0.03em; font-weight:800; }
+  h2 { font-size:clamp(34px, 5vw, 64px); line-height:1.02; letter-spacing:-0.02em; font-weight:800; }
+  .grad { background:linear-gradient(120deg,#FFFFFF 0%,#E6E6E6 45%,#C0C0C0 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  p.lead { font-size:clamp(17px, 2vw, 24px); color:#d4d4d4; line-height:1.55; max-width:820px; margin-top:20px; }
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:28px; max-width:900px; }
+  .card { background:#111111; border:1px solid #333333; border-radius:20px; padding:22px 24px; }
+  .card h3 { font-size:19px; margin-bottom:8px; }
+  .card p { color:#c9c9c9; font-size:15px; line-height:1.55; }
+  .pill { display:inline-block; padding:8px 16px; border-radius:999px; border:1px solid rgba(255,46,99,0.45); background:rgba(255,46,99,0.14); color:#FF6B8A; font-size:14px; font-weight:600; margin:6px 8px 0 0; }
+  .bar { height:8px; border-radius:99px; background:linear-gradient(135deg,#42060F,#800020 48%,#B3122F 130%); margin-top:24px; max-width:520px; }
+  .say { margin-top:26px; font-size:14px; color:#8f8f8f; border-left:3px solid #800020; padding-left:14px; max-width:820px; line-height:1.5; }
+  .say b { color:#c9c9c9; }
+  .nav { position:fixed; right:32px; bottom:28px; z-index:5; display:flex; gap:10px; }
+  .nav button { width:52px; height:52px; border-radius:50%; border:1px solid #333; background:#800020; color:#fff; font-size:22px; cursor:pointer; }
+  .nav button:hover { background:#5C0A18; }
+  .dots { position:fixed; left:50%; transform:translateX(-50%); bottom:38px; z-index:5; display:flex; gap:8px; }
+  .dots button { width:10px; height:10px; border-radius:50%; border:0; background:#333; cursor:pointer; padding:0; }
+  .dots button.on { background:#FF2E63; }
+  .counter { position:fixed; left:36px; bottom:34px; z-index:5; color:#888; font-size:13px; letter-spacing:0.1em; }
+  .progress { position:fixed; top:0; left:0; height:3px; background:#FF2E63; z-index:6; transition:width 0.7s ease; }
+  .foot { position:fixed; right:36px; bottom:36px; z-index:5; color:#666; font-size:12px; }
+  @media (max-width:700px){ .cards{grid-template-columns:1fr;} .brand{left:20px; top:20px;} }
+</style>
+</head>
+<body>
+<canvas id="starfield"></canvas>
+<div class="progress" id="progress"></div>
+<div class="brand"><div class="logo-box">S.</div> SableShield</div>
+<div class="deck">
+  <section class="slide active">
+    <div class="kicker">SableShield · Explainer</div>
+    <h1><span class="grad">Open source,</span><br>explained simply.</h1>
+    <p class="lead">Live scam-call detection. On-device, private, open-weight. This deck exists so you can read it and explain it in your own words to anyone.</p>
+    <div class="say"><b>Say:</b> This is the SableShield explainer — what open source is, where it lives in my app, and why it matters.</div>
+  </section>
+  <section class="slide">
+    <div class="kicker">Problem</div>
+    <h2>Scammers steal billions.<br>One phone call at a time.</h2>
+    <p class="lead">You find out only after the money is gone. And every protection acts after the fact — blocking a number, reporting it, all of it happens after the call.</p>
+    <div class="bar"></div>
+    <div class="say"><b>Say:</b> Trust is exploited in real time, but protection always arrives late.</div>
+  </section>
+  <section class="slide">
+    <div class="kicker">What is open source?</div>
+    <h2>The recipe is public,<br>not secret.</h2>
+    <p class="lead">Open source means the code and the model's weights are public — anyone can inspect them, run them, change them. Closed means only the company has them; you only get an API, never the model itself.</p>
+    <div class="cards">
+      <div class="card"><h3>What are weights?</h3><p>The billions of numbers inside the model. During training, these numbers get tuned — and those numbers are the model's entire knowledge.</p></div>
+      <div class="card"><h3>What do open weights mean?</h3><p>These numbers are public. Download them, run them on your own machine. So the model is yours — not dependent on any server.</p></div>
+    </div>
+    <div class="say"><b>Say:</b> Weights = the model's numbers. Open = numbers public. Closed = numbers secret.</div>
+  </section>
+  <section class="slide">
+    <div class="kicker">Where is it in my app?</div>
+    <h2>Two places. Both open.</h2>
+    <div class="cards">
+      <div class="card"><h3>1 · The model is open — Gemma 4</h3><p>In live mode, Gemma 4 gives the verdict (gemma-4-26b-a4b-it). Its weights are public, so the same model can run on a phone.</p></div>
+      <div class="card"><h3>2 · The code is open — MIT</h3><p>The whole project is in a public repo: website, demo, live mode, server — anyone can read and run it.</p></div>
+    </div>
+    <p class="lead">The demo's scripted verdicts are not AI — they exist for on-stage reliability. The real AI is in live mode, with the Gemma verdict.</p>
+    <div class="say"><b>Say:</b> Model open + code open. Demo is scripted, live mode is real AI — that honesty is the credibility.</div>
+  </section>
+  <section class="slide">
+    <div class="kicker">Why only open weights?</div>
+    <h2>Closed AI cannot do<br>this job at all.</h2>
+    <div class="cards">
+      <div class="card"><h3>Privacy</h3><p>Closed AI would have to send a live call to a server — the very violation we are protecting against.</p></div>
+      <div class="card"><h3>Speed</h3><p>A 2–5 second cloud round-trip is too slow. By then the OTP is gone. On-device warns in milliseconds.</p></div>
+      <div class="card"><h3>Cost</h3><p>If every call costs an API fee, a free product is impossible. Open weights cost zero per call.</p></div>
+      <div class="card"><h3>Offline</h3><p>Cloud AI dies in villages and on weak networks. On-device keeps working there.</p></div>
+    </div>
+    <div class="say"><b>Say:</b> Four reasons in one line — privacy, speed, cost, offline. Closed fails all four.</div>
+  </section>
+  <section class="slide">
+    <div class="kicker">How it works</div>
+    <h2>Watch. Flags. Verdict.</h2>
+    <p class="lead">Scam demo: lines appear, every scam line gets a flag — urgency, OTP, isolation. Verdict: <b>SCAM DETECTED — HANG UP NOW, 94%.</b> Safe call: <b>8% risk</b>, with reasons. Live mode: paste your own line, Gemma gives the verdict.</p>
+    <div><span class="pill">Urgency flag</span><span class="pill">OTP — CRITICAL</span><span class="pill">Isolation flag</span><span class="pill">94% SCAM</span><span class="pill">8% SAFE</span></div>
+    <div class="say"><b>Say:</b> Show the demo, count the flags, read the verdict — then show the same verdict on your own line in live mode.</div>
+  </section>
+  <section class="slide">
+    <div class="kicker">If anyone asks</div>
+    <h2>Short answers, ready.</h2>
+    <div class="cards">
+      <div class="card"><h3>Why not GPT?</h3><p>It is closed — the call goes to its server, it costs money, it is slow, it does not work offline.</p></div>
+      <div class="card"><h3>When on a real call?</h3><p>No app can tap cellular call audio. Production paths: VoIP dialer, carrier/OEM integration, speakerphone + mic fallback.</p></div>
+      <div class="card"><h3>Different from Truecaller?</h3><p>It blocks numbers, after the fact. We read content, during the call — a new number gets caught too.</p></div>
+      <div class="card"><h3>No key?</h3><p>The rule-based fallback runs — the same patterns, without AI. The product never fails.</p></div>
+    </div>
+  </section>
+  <section class="slide">
+    <div class="kicker">Close</div>
+    <h1><span class="grad">Only open weights</span><br>make this legal.</h1>
+    <p class="lead">AI listens live, and stops the scam before your money is gone. Open-source · MIT · Powered by Gemma 4.</p>
+    <p class="lead" style="font-size:16px; color:#999;">github.com/shivvpokhariya-lgtm/sableshield · shivvpokhariya-lgtm.github.io/sableshield</p>
+    <div class="say"><b>Say:</b> One line, then stop. Thank you.</div>
+  </section>
+</div>
+<div class="counter" id="counter">1 / 8</div>
+<div class="dots" id="dots"></div>
+<div class="nav"><button id="prev" aria-label="Previous">‹</button><button id="next" aria-label="Next">›</button></div>
+<div class="foot">SableShield — Open Source, Explained</div>
+<script>
+  (function(){
+    var cv = document.getElementById('starfield'), ctx = cv.getContext('2d');
+    var stars = [], W = 0, H = 0, last = 0;
+    function resize(){
+      var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      W = window.innerWidth; H = window.innerHeight;
+      cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var n = Math.min(140, Math.floor(W * H / 9000));
+      stars = [];
+      for (var i = 0; i < n; i++){
+        var c = Math.random();
+        stars.push({ x: Math.random() * W, y: Math.random() * H, r: 0.6 + Math.random() * 1.8,
+          p: Math.random() * Math.PI * 2, s: 0.3 + Math.random() * 0.7,
+          col: c < 0.6 ? '255,255,255' : (c < 0.8 ? '0,240,255' : '157,78,221') });
+      }
+    }
+    function frame(t){
+      requestAnimationFrame(frame);
+      if (t - last < 33) return; last = t;
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < stars.length; i++){
+        var s = stars[i];
+        s.p += 0.02 * s.s; s.y -= 0.05 * s.s;
+        if (s.y < -4){ s.y = H + 4; s.x = Math.random() * W; }
+        var a = 0.7 + 0.3 * Math.sin(s.p);
+        var g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 4);
+        g.addColorStop(0, 'rgba(' + s.col + ',' + a + ')'); g.addColorStop(1, 'rgba(' + s.col + ',0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 4, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    window.addEventListener('resize', resize); resize(); requestAnimationFrame(frame);
+  })();
+  (function(){
+    var slides = document.querySelectorAll('.slide');
+    var dotsBox = document.getElementById('dots');
+    var counter = document.getElementById('counter');
+    var bar = document.getElementById('progress');
+    var cur = 0;
+    for (var i = 0; i < slides.length; i++){
+      (function(i){
+        var b = document.createElement('button');
+        b.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+        b.addEventListener('click', function(){ go(i); });
+        dotsBox.appendChild(b);
+      })(i);
+    }
+    var dots = dotsBox.querySelectorAll('button');
+    function go(i){
+      if (i < 0) i = 0; if (i >= slides.length) i = slides.length - 1;
+      slides[cur].classList.remove('active'); dots[cur].classList.remove('on');
+      cur = i;
+      slides[cur].classList.add('active'); dots[cur].classList.add('on');
+      counter.textContent = (cur + 1) + ' / ' + slides.length;
+      bar.style.width = ((cur + 1) / slides.length * 100) + '%';
+    }
+    document.getElementById('prev').addEventListener('click', function(){ go(cur - 1); });
+    document.getElementById('next').addEventListener('click', function(){ go(cur + 1); });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){ e.preventDefault(); go(cur + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); go(cur - 1); }
+      if (e.key === 'Home') go(0);
+      if (e.key === 'End') go(slides.length - 1);
+    });
+    var tx = null;
+    document.addEventListener('touchstart', function(e){ tx = e.touches[0].clientX; }, {passive:true});
+    document.addEventListener('touchend', function(e){
+      if (tx === null) return;
+      var dx = e.changedTouches[0].clientX - tx;
+      if (dx < -50) go(cur + 1); if (dx > 50) go(cur - 1);
+      tx = null;
+    }, {passive:true});
+    go(0);
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SableShield Android prototype — speakerphone + mic edition.
+
+  HONEST LIMIT: no third-party app can tap the cellular call audio stream.
+  This app listens through the MICROPHONE while the call is on speaker.
+  It never records, stores, or transmits audio: Vosk runs on-device and
+  transcripts are analysed in memory, then discarded.
+
+  Automatic start: on a call the receiver launches the translucent
+  trampoline activity (allowed from background only because the overlay
+  permission is granted); the trampoline starts the mic service from
+  the foreground and finishes at once, so the call screen never
+  changes. Without overlay permission, a tap-to-start notification
+  is posted instead.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Mic: the only audio path available to a third-party app. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- Call state only (OFFHOOK/IDLE) — never call audio content. -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- Recent calls list + incoming number for the Report flow. -->
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <!-- Contact names next to numbers in the recent-calls list. -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- Model download (one-time, ~40MB per language). -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Foreground mic service (Android 12+ / 14 rules). -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Overlay: live verdict banner above the call screen, and the
+         background-activity-start exemption that makes automatic
+         call listening possible. Without this declaration
+         Settings.canDrawOverlays() can never become true. -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!-- Full-screen call alert: lets the guard start itself the moment a
+         call is answered, even on Android 15+ where background activity
+         starts are banned. -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+
+    <!-- Launcher icon: the S. box, adaptive (black bg + white box). -->
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:theme="@style/Theme.SableShield">
+
+        <!-- Front door: shield only + one button. -->
+        <activity
+            android:name=".LandingActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true" />
+
+        <!-- Invisible trampoline: starts the mic service from the
+             foreground on an incoming call, then finishes at once. -->
+        <activity
+            android:name=".CallTrampolineActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!-- Foreground service: mic capture + on-device recognition. -->
+        <service
+            android:name=".MicListenService"
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
+
+        <!-- Call-state detection. PHONE_STATE is delivered to manifest
+             receivers holding READ_PHONE_STATE; it carries state only,
+             never audio. On call end (IDLE) the service stops itself. -->
+        <receiver
+            android:name=".CallStateReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+</manifest>

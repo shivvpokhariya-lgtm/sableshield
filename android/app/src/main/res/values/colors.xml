@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SableShield — copied from the deployed GitHub Pages site
+  (sableshield repo, index.html): black base, burgundy danger,
+  hot-pink accent, olive safe. The web app itself is NOT modified;
+  these tokens only mirror its theme on Android.
+-->
+<resources>
+    <color name="bg">#050505</color>
+    <color name="card">#111111</color>
+    <color name="panel">#1A1A1A</color>
+    <color name="border">#222222</color>
+    <color name="border_strong">#333333</color>
+    <color name="text">#EBEBEB</color>
+    <color name="text2">#D8D8D8</color>
+    <color name="muted">#888888</color>
+    <color name="faint">#666666</color>
+    <color name="dim">#444444</color>
+    <color name="accent">#FF2E63</color>
+    <color name="accent_dark">#7F1D1D</color>
+    <color name="burgundy">#800020</color>
+    <color name="burgundy_hover">#5C0A18</color>
+    <color name="verdict_start">#42060F</color>
+    <color name="verdict_end">#B3122F</color>
+    <color name="synth">#FF1E46</color>
+    <color name="flag">#FF6B8A</color>
+    <color name="scam">#800020</color>
+    <color name="safe">#4A5D23</color>
+    <color name="safe_text">#A3C585</color>
+    <color name="cyan">#00C2D8</color>
+    <color name="no_sign_disc">#0A0A0A</color>
+</resources>
