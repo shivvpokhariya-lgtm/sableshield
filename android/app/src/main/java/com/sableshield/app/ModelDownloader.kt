@@ -122,7 +122,7 @@ object ModelDownloader {
                     done(false, "Download incomplete ($read of $total bytes) — check connection and tap Download again.")
                     return@Thread
                 }
-                installFromZip(zipFile, lang, appContext, done)
+                installFromZip(zipFile, lang, appContext, { ok, msg -> done(ok, msg) })
             } catch (e: Exception) {
                 try { tmp.deleteRecursively() } catch (ignored: Exception) { }
                 done(false, "Download error (${e.javaClass.simpleName}): ${e.message} — check connection and tap Download again.")
@@ -153,7 +153,7 @@ object ModelDownloader {
                 appContext.assets.open("models/vosk-model-$lang.zip").use { input ->
                     FileOutputStream(zipFile).use { out -> input.copyTo(out) }
                 }
-                installFromZip(zipFile, lang, appContext, done)
+                installFromZip(zipFile, lang, appContext, { ok, msg -> done(ok, msg) })
             } catch (e: Exception) {
                 done(false, "Bundled model not available (${e.javaClass.simpleName}) — use Download instead.")
             }
