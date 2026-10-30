@@ -1,0 +1,16 @@
+# SableShield Android — standard Android ignores.
+# (This project is built from Android Studio; it never had a gradlew wrapper.)
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/app/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+*.apk
+*.aab
+*.ap_
